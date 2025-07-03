@@ -1,0 +1,79 @@
+{
+    "name": "step-ca-manager-stack Workspace (Archlinux)",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".",
+        "args": {
+            "VARIANT": "latest"
+        }
+    },
+    "workspaceFolder": "/workspace/step-ca-manager-stack",
+    "workspaceMount": "source=step-ca-manager-stack-workspace,target=/workspace/step-ca-manager-stack,type=volume",
+    "mounts": [
+        "source=step-ca-manager-stack-home,target=/home/vscode,type=volume"
+    ],
+    "remoteUser": "vscode",
+    "runArgs": [
+        "--name",
+        "step-ca-manager-stack-workspace",
+        "--network=step-ca-manager-stack-workspace-network"
+    ],
+    "features": {
+        "ghcr.io/bartventer/arch-devcontainer-features/common-utils:1": {
+            "username": "vscode",
+            "additionalPackages": "base-devel",
+            "installZsh": true,
+            "installOhMyZsh": true,
+            "configureZshAsDefaultShell": true
+        },
+        "ghcr.io/bartventer/arch-devcontainer-features/docker-outside-of-docker:1": {},
+        "ghcr.io/zyrakq/arch-devcontainer-features/clone-repo:1": {
+            "repoUrl": "git@github.com:zyrakq/step-ca-manager-stack.git",
+            "targetDir": "/workspace/step-ca-manager-stack"
+        }
+    },
+    "initializeCommand": [
+        "bash",
+        "-c",
+        "docker network ls | grep -q step-ca-manager-stack-workspace-network || docker network create step-ca-manager-stack-workspace-network"
+    ],
+    "postCreateCommand": [
+        "bash",
+        "-c",
+        "git config --global commit.template /workspace/step-ca-manager-stack/.gitmessage"
+    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                // VSCode
+                "vscode-icons-team.vscode-icons",
+                "aaron-bond.better-comments",
+                "davidanson.vscode-markdownlint",
+                // Docker
+                "ms-azuretools.vscode-docker",
+                // Git
+                "eamodio.gitlens",
+                "codezombiech.gitignore",
+                // AI Assistant
+                "kilocode.kilo-code"
+            ],
+            "settings": {
+                "extensions.autoCheckUpdates": false,
+                "extensions.ignoreRecommendations": true,
+                "files.exclude": {
+                    "**/.git": false
+                },
+                "workbench.iconTheme": "vscode-icons",
+                "files.associations": {
+                    "*.json": "jsonc"
+                },
+                "editor.formatOnSave": true,
+                "kilo-code.allowedCommands": [
+                    "git log",
+                    "git diff",
+                    "git show"
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,6 @@
+[submodule "src/unbound"]
+	path = src/unbound
+	url = https://github.com/zyrakq/unbound-stack.git
+[submodule "src/step-ca-manager/src/step-ca-companion"]
+	path = src/step-ca-manager/src/step-ca-companion
+	url = https://github.com/zyrakq/step-ca-companion.git
