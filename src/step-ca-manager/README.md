@@ -109,7 +109,8 @@ sudo update-ca-trust
 
 ### Key Environment Variables
 
-- `STEP_CA_HOST`: Domains for certificate generation
+- `LETSENCRYPT_HOST`: Domains for certificate generation
+- `LETSENCRYPT_EMAIL`: Email for certificate registration
 - `STEP_CA_TRUST`: Enable trust certificate installation
 
 For advanced configuration see [step-ca-companion documentation](src/step-ca-companion/README.md).
