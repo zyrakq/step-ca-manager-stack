@@ -14,6 +14,9 @@ Detailed git workflow rules. Includes strict commit formatting requirements, wor
 - Don't put periods at end of lines where new sentences don't start on same line
 - Answer "what" and "why" questions, not "how" (avoid implementation details)
 - Focus on business value and reasoning, not technical steps
+- Each change item should start on a new line in "what" and "why" blocks
+- Use past tense verbs for "what was done" (Replaced, Added, Updated)
+- Use present tense verbs for "why it was done" (Provide, Improve, Enable)
 
 ## API request conservation
 
