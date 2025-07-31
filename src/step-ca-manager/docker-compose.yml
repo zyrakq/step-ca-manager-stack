@@ -2,6 +2,7 @@ services:
   step-ca:
     container_name: step-ca
     image: smallstep/step-ca:latest
+    restart: unless-stopped
     environment:
       - DOCKER_STEPCA_INIT_NAME=Step CA
       - DOCKER_STEPCA_INIT_DNS_NAMES=step-ca,localhost
@@ -23,6 +24,7 @@ services:
   step-ca-proxy:
     container_name: step-ca-proxy
     image: nginxproxy/nginx-proxy:latest
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
@@ -40,6 +42,7 @@ services:
   step-ca-companion:
     container_name: step-ca-companion
     image: ghcr.io/zyrakq/step-ca-companion:latest
+    restart: unless-stopped
     # build:
     #   context: ./src/step-ca-companion/app
     #   dockerfile: Dockerfile
@@ -48,7 +51,6 @@ services:
       ACME_STAGING: false
       STEP_CA_CONTAINER_NAME: step-ca
       STEP_CA_BOOTSTRAP_TIMEOUT: 300
-    restart: always
     depends_on:
       step-ca:
         condition: service_healthy
