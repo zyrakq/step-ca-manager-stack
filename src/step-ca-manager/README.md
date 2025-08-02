@@ -112,6 +112,7 @@ sudo update-ca-trust
 - `LETSENCRYPT_HOST`: Domains for certificate generation
 - `LETSENCRYPT_EMAIL`: Email for certificate registration
 - `STEP_CA_TRUST`: Enable trust certificate installation
+- `STEP_CA_TRUST_RESTART`: Restart container after certificate installation
 
 For advanced configuration see [step-ca-companion documentation](src/step-ca-companion/README.md).
 
@@ -149,9 +150,20 @@ Run the deployment with DNS parameter:
 
 If the Docker systemd service doesn't include the config file parameter, add it manually:
 
+```bash
+sudo mkdir -p /etc/systemd/system/docker.service.d
+sudo nano /etc/systemd/system/docker.service.d/override.conf
+```
+
 ```ini
 [Service]
-ExecStart=/usr/bin/dockerd --config-file=/etc/docker/daemon.json
+ExecStart=
+ExecStart=/usr/bin/dockerd --config-file=/etc/docker/daemon.json --your-new-options-here
+```
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart docker
 ```
 
 ## 📚 Documentation

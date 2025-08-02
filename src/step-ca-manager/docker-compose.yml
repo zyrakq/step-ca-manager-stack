@@ -42,15 +42,17 @@ services:
   step-ca-companion:
     container_name: step-ca-companion
     image: ghcr.io/zyrakq/step-ca-companion:latest
-    restart: unless-stopped
+    # image: step-ca-companion:latest
     # build:
     #   context: ./src/step-ca-companion/app
     #   dockerfile: Dockerfile
+    restart: unless-stopped
     environment:
       ACME_CA_URI: https://step-ca:9000/acme/acme/directory
       ACME_STAGING: false
       STEP_CA_CONTAINER_NAME: step-ca
       STEP_CA_BOOTSTRAP_TIMEOUT: 300
+      DEFAULT_RENEW: 1
     depends_on:
       step-ca:
         condition: service_healthy
