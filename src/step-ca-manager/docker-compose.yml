@@ -4,27 +4,37 @@ services:
     image: smallstep/step-ca:latest
     restart: unless-stopped
     environment:
-      - DOCKER_STEPCA_INIT_NAME=Step CA
-      - DOCKER_STEPCA_INIT_DNS_NAMES=step-ca,localhost
-      - DOCKER_STEPCA_INIT_ACME=true
-      - DOCKER_STEPCA_INIT_REMOTE_MANAGEMENT=true
-    volumes:
-      - step-ca-data:/home/step
-    networks:
-      - step-ca-proxy-tier
-    ports:
-      - "9000:9000"
+      DOCKER_STEPCA_INIT_NAME: "Step CA"
+      DOCKER_STEPCA_INIT_DNS_NAMES: "step-ca,localhost"
+      DOCKER_STEPCA_INIT_ACME: true
+      DOCKER_STEPCA_INIT_REMOTE_MANAGEMENT: true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 10m
+        max-file: 3
     healthcheck:
       test: ["CMD", "step", "ca", "health", "--ca-url=https://localhost:9000"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 10s
+    ports:
+      - "9000:9000"
+    volumes:
+      - step-ca-data:/home/step
+    networks:
+      - step-ca-proxy-tier
 
   step-ca-proxy:
     container_name: step-ca-proxy
     image: nginxproxy/nginx-proxy:latest
     restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 10m
+        max-file: 3
     ports:
       - "80:80"
       - "443:443"
@@ -53,6 +63,11 @@ services:
       STEP_CA_CONTAINER_NAME: step-ca
       STEP_CA_BOOTSTRAP_TIMEOUT: 300
       DEFAULT_RENEW: 1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 10m
+        max-file: 3
     depends_on:
       step-ca:
         condition: service_healthy

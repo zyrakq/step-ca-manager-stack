@@ -2,11 +2,16 @@ services:
   step-ca-unbound:
     container_name: step-ca-unbound
     image: ghcr.io/zyrakq/unbound:latest
-    ports:
-      - "${DNS_SERVER}:53:53/udp"
-      - "${DNS_SERVER}:53:53/tcp"
+    restart: unless-stopped
     environment:
       ACCESS_CONTROL_CUSTOM: ${ACCESS_CONTROL_CUSTOM}
       LOCAL_DOMAINS: ${LOCAL_DOMAINS}
       BLOCK_PRIVATE: ${BLOCK_PRIVATE:-false}
-    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 10m
+        max-file: 3
+    ports:
+      - "${DNS_SERVER}:53:53/udp"
+      - "${DNS_SERVER}:53:53/tcp"
