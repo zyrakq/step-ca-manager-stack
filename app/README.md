@@ -41,16 +41,16 @@ For automatic certificate installation and updates when step-ca container restar
 
 ```bash
 # Install user systemd integration (no sudo required)
-./src/step-ca-companion/scripts/install-systemd-integration.sh
+./../modules/step-ca-companion/scripts/install-systemd-integration.sh
 
 # Check status
-./src/step-ca-companion/scripts/install-systemd-integration.sh status
+./../modules/step-ca-companion/scripts/install-systemd-integration.sh status
 
 # View logs
 journalctl --user -u step-ca-monitor.service -f
 
 # Remove integration
-./src/step-ca-companion/scripts/install-systemd-integration.sh uninstall
+./../modules/step-ca-companion/scripts/install-systemd-integration.sh uninstall
 ```
 
 **User Systemd Service Features:**
@@ -65,10 +65,10 @@ journalctl --user -u step-ca-monitor.service -f
 
 ```bash
 # Run the automated installation script once
-./src/step-ca-companion/scripts/install-host-trust.sh
+./../modules/step-ca-companion/scripts/install-host-trust.sh
 
 # With custom step-ca container name
-STEP_CA_CONTAINER_NAME=my-step-ca ./src/step-ca-companion/scripts/install-host-trust.sh
+STEP_CA_CONTAINER_NAME=my-step-ca ./../modules/step-ca-companion/scripts/install-host-trust.sh
 ```
 
 ### Manual Installation
@@ -137,7 +137,7 @@ Replace `${DNS_SERVER}` with the actual IP address of your DNS server.
 Run the deployment with DNS parameter:
 
 ```bash
-./deploy.sh --dns
+COMPOSE_PROFILES=dns docker compose up -d
 ```
 
 ### ⚠️ Important Notes
@@ -175,7 +175,7 @@ sudo systemctl restart docker
 ## 📊 vs Let's Encrypt
 
 | Feature | Let's Encrypt | step-ca |
-|---------|---------------|---------|
+| ------- | ------------- | ------- |
 | Trust | Automatic | Manual root cert install |
 | Network | Internet required | Local only |
 | Rate limits | Yes | No |

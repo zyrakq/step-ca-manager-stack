@@ -4,8 +4,8 @@ A technology stack for setting up local domain names in Docker with trusted cert
 
 ## 📦 Components
 
-- **[step-ca-manager](src/step-ca-manager/)** - SSL certificate management with private CA and ACME protocol
-- **[unbound](src/unbound/)** - Local DNS resolver for custom domain names
+- **[step-ca-manager](app/)** - SSL certificate management with private CA and ACME protocol
+- **[unbound](modules/unbound/)** - Local DNS resolver for custom domain names
 
 ## 🎯 Purpose
 
@@ -19,8 +19,8 @@ This stack enables you to:
 
 **Recommended setup order:**
 
-1. **Start with [unbound](src/unbound/)** - Set up local DNS resolution first
-2. **Then configure [step-ca-manager](src/step-ca-manager/)** - Add SSL certificates for your domains
+1. **Start with [unbound](modules/unbound/)** - Set up local DNS resolution first
+2. **Then configure [step-ca-manager](app/)** - Add SSL certificates for your domains
 3. Follow the specific README instructions for each component
 
 This order ensures you have working local domain resolution before adding SSL certificates.

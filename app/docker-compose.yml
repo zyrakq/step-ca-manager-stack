@@ -1,4 +1,26 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: ${LOG_MAX_SIZE:-10m}
+    max-file: ${LOG_MAX_FILE:-3}
+    compress: ${LOG_COMPRESS:-true}
+
 services:
+  step-ca-unbound:
+    container_name: step-ca-unbound
+    image: ghcr.io/zyrakq/unbound:latest
+    restart: unless-stopped
+    profiles:
+      - dns
+    environment:
+      ACCESS_CONTROL_CUSTOM: ${ACCESS_CONTROL_CUSTOM}
+      LOCAL_DOMAINS: ${LOCAL_DOMAINS}
+      BLOCK_PRIVATE: ${BLOCK_PRIVATE:-false}
+    logging: *default-logging
+    ports:
+      - ${DNS_SERVER}:53:53/udp
+      - ${DNS_SERVER}:53:53/tcp
+
   step-ca:
     container_name: step-ca
     image: smallstep/step-ca:latest
@@ -8,11 +30,7 @@ services:
       DOCKER_STEPCA_INIT_DNS_NAMES: "step-ca,localhost"
       DOCKER_STEPCA_INIT_ACME: true
       DOCKER_STEPCA_INIT_REMOTE_MANAGEMENT: true
-    logging:
-      driver: "json-file"
-      options:
-        max-size: 10m
-        max-file: 3
+    logging: *default-logging
     healthcheck:
       test: ["CMD", "step", "ca", "health", "--ca-url=https://localhost:9000"]
       interval: 30s
@@ -20,7 +38,7 @@ services:
       retries: 3
       start_period: 10s
     ports:
-      - "9000:9000"
+      - 9000:9000
     volumes:
       - step-ca-data:/home/step
     networks:
@@ -28,16 +46,12 @@ services:
 
   step-ca-proxy:
     container_name: step-ca-proxy
-    image: nginxproxy/nginx-proxy:latest
-    restart: unless-stopped
-    logging:
-      driver: "json-file"
-      options:
-        max-size: 10m
-        max-file: 3
+    image: nginxproxy/nginx-proxy:1.9.0
+    restart: always
+    logging: *default-logging
     ports:
-      - "80:80"
-      - "443:443"
+      - ${SSL_AUTOMATATION_IP:-0.0.0.0}:80:80
+      - ${SSL_AUTOMATATION_IP:-0.0.0.0}:443:443
     labels:
       com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
     volumes:
@@ -63,11 +77,8 @@ services:
       STEP_CA_CONTAINER_NAME: step-ca
       STEP_CA_BOOTSTRAP_TIMEOUT: 300
       DEFAULT_RENEW: 1
-    logging:
-      driver: "json-file"
-      options:
-        max-size: 10m
-        max-file: 3
+      NGINX_DOCKER_GEN_CONTAINER: step-ca-proxy
+    logging: *default-logging
     depends_on:
       step-ca:
         condition: service_healthy

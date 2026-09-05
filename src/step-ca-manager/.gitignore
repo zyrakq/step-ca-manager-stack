@@ -1,6 +1,0 @@
-# Certificates and keys (if accidentally placed in folder)
-*.crt
-*.key
-*.pem
-
-.env
